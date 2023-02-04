@@ -80,7 +80,7 @@ jobs:
           if-no-files-found: error
           retention-days: 5
 
-  e2e-tests:
+  test-e2e:
     needs:
       - build
     name: E2E Tests
