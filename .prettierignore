@@ -2,4 +2,5 @@
 .output
 .nuxt
 reports
+coverage
 .lighthouseci

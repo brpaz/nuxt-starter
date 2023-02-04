@@ -2,7 +2,12 @@
  * @type {import("eslint").Linter.Config}
  */
 const config = {
-  extends: ['eslint:recommended', 'prettier', 'plugin:vue/vue3-recommended', 'plugin:cypress/recommended'],
+  extends: [
+    'eslint:recommended',
+    'prettier',
+    'plugin:vue/vue3-recommended',
+    'plugin:cypress/recommended',
+  ],
   env: {
     browser: true,
     node: true,
