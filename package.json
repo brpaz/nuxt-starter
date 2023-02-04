@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "NODE_ENV=production nuxt build",
+    "build:cloudflare": "NITRO_PRESET=cloudflare yarn build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

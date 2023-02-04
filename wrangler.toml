@@ -1,6 +1,6 @@
 compatibility_date = "2022-09-10"
 main = "./.output/server/index.mjs"
-name = "playground"
+name = "nuxt-starter-demo"
 send_metrics = false
 workers_dev = true
 [site]
