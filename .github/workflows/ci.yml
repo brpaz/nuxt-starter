@@ -140,7 +140,7 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     needs:
       - build
-      - test
+      - test-e2e
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
