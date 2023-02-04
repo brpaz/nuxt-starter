@@ -1,3 +1,3 @@
 module.exports = {
-  '**/*.{js,jsx,ts,tsx,vue}': ['yarn lint:fix', 'yarn format'],
+  '**/*.{js,jsx,ts,tsx,vue}': ['yarn lint:fix', 'yarn format', 'git add'],
 };
