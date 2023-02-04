@@ -24,5 +24,5 @@ jobs:
     steps:
       - uses: danielchabr/pr-labels-checker@v3.1
         with:
-          hasSome: feature,enhancement,bug,documentation,duplicate,security,chore,maintenance
+          hasSome: feature,enhancement,bug,documentation,duplicate,security,chore,maintenance,dependencies
           githubToken: ${{ secrets.GITHUB_TOKEN }}
