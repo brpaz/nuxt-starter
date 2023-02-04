@@ -20,7 +20,7 @@ env:
   NODE_VERSION: 18
 jobs:
   build:
-    name: Build
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,6 +47,23 @@ jobs:
       - name: Run Lint
         run: yarn lint
 
+      - name: Run Unit Tests
+        run: yarn test
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jest-report
+          path: reports/jest
+
+      - name: Upload Coverage reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: reports/coverage
+
       - name: Check formatting
         run: yarn format:check
 
@@ -63,10 +80,10 @@ jobs:
           if-no-files-found: error
           retention-days: 5
 
-  test:
+  e2e-tests:
     needs:
       - build
-    name: Test
+    name: E2E Tests
     runs-on: ubuntu-latest
     env:
       NUXT_BASE_URL: http://localhost:3000

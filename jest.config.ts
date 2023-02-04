@@ -28,6 +28,22 @@ const jestConfig: JestConfigWithTsJest = {
       },
     ],
   },
+  reporters: [
+    'summary',
+    [
+      './node_modules/jest-html-reporter',
+      {
+        pageTitle: 'Test Report',
+        outputPath: './reports/jest/index.html',
+      },
+    ],
+    [
+      'github-actions',
+      {
+        silent: false,
+      },
+    ],
+  ],
 };
 
 export default jestConfig;
