@@ -126,15 +126,6 @@ jobs:
           configPath: .lighthouserc.cjs
           uploadArtifacts: true
 
-      - name: Build for Cloudflare
-        run: NITRO_PRESET=cloudflare yarn build
-
-      - name: Publish to clouddflare
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-
   release:
     name: Release
     if: github.event_name == 'release' && github.event.action == 'published'
@@ -142,6 +133,7 @@ jobs:
       - build
       - test-e2e
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -157,6 +149,15 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Build for Cloudflare
+        run: NITRO_PRESET=cloudflare yarn build
+
+      - name: Publish to clouddflare
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }
 
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
