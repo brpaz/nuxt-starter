@@ -1,0 +1,153 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  HUSKY: "0" # Don´t run Husky hooks on CI
+  NODE_VERSION: 18
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: |
+          npm pkg delete scripts.prepare # disable husky
+          yarn install --frozen-lockfile
+
+      - name: Save node_modules cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            .cache/Cypress
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Run Lint
+        run: yarn lint
+
+      - name: Check formatting
+        run: yarn format:check
+
+      - name: Run Typecheck
+        run: yarn typecheck
+
+      - name: Build
+        run: yarn build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: site-build
+          path: .output
+          if-no-files-found: error
+          retention-days: 5
+
+  test:
+    needs:
+      - build
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      NUXT_BASE_URL: http://localhost:3000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: site-build
+          path: ./output
+
+      - name: Restore node_modules cache
+        id: restore-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        run: |
+          npm pkg delete scripts.prepare # disable husky
+          yarn install --frozen-lockfile
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          browser: chrome
+          start: yarn preview
+          wait-on: "${{ env.NUXT_BASE_URL }}"
+
+      - name: Run Lighthouse test
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          configPath: .lighthouserc.cjs
+          uploadArtifacts: true
+
+  release:
+    name: Release
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs:
+      - build
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+
+      - name: Restore node_modules cache
+        id: restore-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: site-build
+          path: ./output
+
+      - run: ls ./output
+
+      - name: Update Changelog
+        uses: stefanzweifel/changelog-updater-action@v1
+        with:
+          latest-version: ${{ github.event.release.name }}
+          release-notes: ${{ github.event.release.body }}
+
+      - name: Commit updated Changelog
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          commit_message: "docs(changelog): [skip ci] update changelog"
+          file_pattern: CHANGELOG.md

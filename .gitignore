@@ -1,0 +1,25 @@
+
+# Node related files
+node_modules
+*.log*
+
+# Nuxt related files
+.nuxt
+.nitro
+.cache
+.output
+dist
+
+# Test reports
+reports
+coverage
+.lighthouseci
+
+# Cypress generated files
+cypress/downloads
+cypress/screenshots
+cypress/videos
+
+# Envrionment specific files
+.env
+docker-compose.override.yml

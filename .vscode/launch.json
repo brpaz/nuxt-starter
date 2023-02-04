@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "command": "yarn dev",
+      "name": "Start Development server",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "command": "yarn docker:dev",
+      "name": "Start Development server (Docker)",
+      "request": "launch",
+      "type": "node-terminal"
+    }
+  ]
+}
