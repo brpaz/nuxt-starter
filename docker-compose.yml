@@ -11,7 +11,7 @@ services:
       - .:/app
       - /app/node_modules
     ports:
-      - '${NUXT_PORT:-3000}:3000'
+      - '${PORT:-3000}:${PORT:-3000}:3000'
     networks:
       - app
 

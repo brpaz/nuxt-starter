@@ -1,29 +1,42 @@
-# Nuxt 3 Minimal Starter
+# {{ site_name }}
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+> {{ site_description }}
 
-## Setup
 
-Make sure to install the dependencies:
+## Development
+
+
+### Install Dependencies
+
+This project uses [Yarn](https://classic.yarnpkg.com/lang/en/) to manage dependencies.
+
+Run the following command to install them:
 
 ```bash
-# yarn
 yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
 ```
 
-## Development Server
+### Setup envrionment variables.
 
-Start the development server on http://localhost:3000
+Project envrionment variables will be defined in `.env` file in the root of the project.
+
+Run `copy .env.example .env` to set the default environment variables and modify any according to your needs.
+
+It´s also recommneded to use [direnv](https://direnv.net/) to simplify the management and auto loading of these envrionment variables in your shell.  After installing direnv, make sure
+to run `direnv allow` in the root of the project, to enable direnv for your project.
+
+### Development Server
+
+To start the application dev server:
 
 ```bash
-npm run dev
+yarn dev
 ```
+
+This will start a development server on http://localhost:3000, by default. You can change the port, by specifying the `PORT` variable on the `.env` file.
+
+If you prefer to use Docker, a docker-compose file is provided. You can run `yarn docker:up` to start a docker container for the application.
+
 
 ## Production
 
