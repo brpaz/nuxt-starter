@@ -30,10 +30,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "yarn"
+
       - name: Install dependencies
         run: |
           npm pkg delete scripts.prepare # disable husky
-          yarn install
+          yarn install --frozen-lockfile
 
       - name: Save node_modules cache
         uses: actions/cache@v3
@@ -49,7 +50,7 @@ jobs:
       - name: Check formatting
         run: yarn format:check
 
-      - name: Run Typecheck
+      - name: Check types
         run: yarn typecheck
 
       - name: Build
@@ -109,9 +110,7 @@ jobs:
           uploadArtifacts: true
 
       - name: Build for Cloudflare
-        run: yarn build
-        env:
-          NITRRO_PRESET: cloudflare
+        run: NITRO_PRESET=cloudflare yarn build
 
       - name: Publish to clouddflare
         uses: cloudflare/wrangler-action@2.0.0

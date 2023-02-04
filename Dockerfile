@@ -31,6 +31,8 @@ CMD ["yarn", "dev"]
 # ====================================
 FROM node:18-alpine3.17 as production
 
+ENV NODE_ENV=production
+
 RUN apk update && apk add dumb-init && adduser -D nuxtuser
 
 USER nuxtuser
