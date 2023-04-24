@@ -2,7 +2,7 @@
 # ====================================
 # Build stage
 # ====================================
-FROM node:18-alpine3.17 as build
+FROM node:20-alpine3.17 as build
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN yarn build
 # ====================================
 # Development stage
 # ====================================
-FROM node:18-alpine3.17 as dev
+FROM node:20-alpine3.17 as dev
 
 WORKDIR /app
 COPY package*.json yarn.lock ./
@@ -29,7 +29,7 @@ CMD ["yarn", "dev"]
 #====================================
 # Production stage
 # ====================================
-FROM node:18-alpine3.17 as production
+FROM node:20-alpine3.17 as production
 
 ENV NODE_ENV=production
 
